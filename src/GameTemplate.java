@@ -19,8 +19,8 @@ public class GameTemplate extends JPanel {
     static Image bgImage2;              // image displayed while play occurs for part 2
     static JPanel panel;                 // main drawing panel
     static JFrame frame;                 // window frame which contains the panel
-    static final int WINDOW_WIDTH = 800; // width of display window
-    static final int WINDOW_HEIGHT = 600;// height of display window
+    static final int WINDOW_WIDTH = 1200; // width of display window
+    static final int WINDOW_HEIGHT = 800;// height of display window
 
     static int gameStage = 0;            // stages of game
     static final int WELCOME_SCREEN = 0;
