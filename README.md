@@ -17,3 +17,8 @@ Commits :
 * Git staging
 * Plus button to stage
 * Commit message and then commit and push
+
+Pulling : 
+
+* Open perspective (top right) Git
+* TBD
