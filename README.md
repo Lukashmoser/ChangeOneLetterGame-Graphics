@@ -21,4 +21,5 @@ Commits :
 Pulling : 
 
 * Open perspective (top right) Git
-* TBD
+* Git Repositories list right click project name
+* Select Pull
