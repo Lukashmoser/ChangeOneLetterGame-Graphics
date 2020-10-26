@@ -9,6 +9,7 @@ First time :
 * File
 * Import
 * Git - use https url from github (code button)
+* New Project Wizard(Select Java Project)
 
 
 Commits : 
