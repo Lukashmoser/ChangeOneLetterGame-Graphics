@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
+import java.io.*;
 
 public class GameTemplate extends JPanel {
 	static Image[] pics = new Image[4]; // array of dancing gifs
@@ -48,12 +49,16 @@ public class GameTemplate extends JPanel {
 	static String instructionsText = ""; // instructions
 	
 	static int turnOnePhase = 0; // switching between input start word, input goal word, and input word change
+	static String[] fileContents;
 
 	// start main program
 	// * initializes the window for the game
 	public static void main(String args[]) {
 		// Create Image Object
 		Toolkit tk = Toolkit.getDefaultToolkit();
+		
+		//initialize the dictionary
+		fileContents = getFileContents("dictionary.txt");
 
 		// Load background images
 		URL url = GameTemplate.class.getResource("bg1.jpg");
@@ -274,7 +279,12 @@ public class GameTemplate extends JPanel {
 		else {
 			dataEntered += (key + "");
 		}
-		playOutput4 = getCurrentPlayer() + " entered ";
+		if(turnOnePhase == 1) {
+			playOutput4 = "Player 2 entered";
+		}
+		else {
+			playOutput4 = getCurrentPlayer() + " entered ";
+		}
 		playOutput2 = dataEntered;
 		panel.repaint();
 	}
@@ -322,16 +332,19 @@ public class GameTemplate extends JPanel {
 		// set up strings for display
 		playOutput = "Processing...";
 		playOutput1 = "Turn " + turn;
-		playOutput4 = getOtherPlayer() + ": ";
-		playOutput2 = currentWord;
+		playOutput4 = "";
+		playOutput2 = "";
 
 		// getting start word and goal word
 		if (turn == 1) {
 			if (turnOnePhase == 0) {
-				playOutput3 = getCurrentPlayer() + " please enter the starting word.";
+				playOutput3 = "Player 1, please enter the starting word.";
 			}
 			else if (turnOnePhase == 1) {
-				playOutput3 = getCurrentPlayer() + " please enter the goal word";
+				playOutput3 = "Player 2, please enter the goal word";
+			}
+			else if (turnOnePhase == 2) {
+				playOutput3 = getCurrentPlayer() + " enter your input.";
 			}
 			panel.repaint();
 		}
@@ -357,15 +370,21 @@ public class GameTemplate extends JPanel {
 		//saving start word
 		if (turnOnePhase == 0) {
 			startWord = dataEntered;
+			for(int i = 0; i < fileContents.length; i ++) {
+				
+			}
 			currentWord = startWord;
 			playOutputList += "The start word is " + startWord + "\n";
 			turnOnePhase++;
 			resetDataEntered = true; 
 			displayTurn();
 		}
+		
+		//saving goal word
 		else if (turnOnePhase == 1) {
 			goalWord = dataEntered;
 			playOutputList += "The goal word is " + goalWord + "\n";
+			turnOnePhase++;
 			resetDataEntered = true;
 			displayTurn();
 		}
@@ -440,5 +459,50 @@ public class GameTemplate extends JPanel {
 			g.drawString(line, x, y += g.getFontMetrics().getHeight());
 		} // for
 	} // drawString
+	
+	//  reads fileName and returns the contents as String array
+    //  with each line of the file as an element of the array
+    public static String [] getFileContents(String fileName){
+
+        String [] contents = null;
+        int length = 0;
+        try {
+
+           // input
+           String folderName = "/subFolder/"; // if the file is contained in the same folder as the .class file, make this equal to the empty string
+           String resource = fileName;
+
+			// this is the path within the jar file
+			InputStream input = GameTemplate.class.getResourceAsStream(folderName + resource);
+			if (input == null) {
+				// this is how we load file within editor (eg eclipse)
+				input = GameTemplate.class.getClassLoader().getResourceAsStream(resource);
+			}
+			BufferedReader in = new BufferedReader(new InputStreamReader(input));	
+           
+           
+           
+           in.mark(Short.MAX_VALUE);  // see api
+
+           // count number of lines in file
+           while (in.readLine() != null) {
+             length++;
+           }
+
+           in.reset(); // rewind the reader to the start of file
+           contents = new String[length]; // give size to contents array
+
+           // read in contents of file and print to screen
+           for (int i = 0; i < length; i++) {
+             contents[i] = in.readLine();
+           }
+           in.close();
+       } catch (Exception e) {
+           System.out.println("File Input Error");
+       }
+
+       return contents;
+
+    } // getFileContents
 
 } // Even and Odd
