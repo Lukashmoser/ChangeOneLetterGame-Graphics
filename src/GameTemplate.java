@@ -1,7 +1,7 @@
 /***************************************************************************************
-* Name:        GameTemplate for Change One leter
-* Author:      Lara Wear
-* Date:        Oct 27, 2011
+* Name:        ChangeOneLetterGame - Graphics
+* Author:      Lukas Moser, Steven Peng
+* Date:        Oct 24, 2020
 * Purpose:     Shows how to create an interactive, graphical application in Java using
                Dialog Boxes from JOptionPane for user input.
 ****************************************************************************************/
