@@ -74,7 +74,7 @@ public class GameTemplate extends JPanel {
         panel = new GameTemplate(); /*****MUST CALL THIS CLASS (ie same as filename) ****/
   
         panel.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));  // set size of application window
-        frame = new JFrame ("Game Template");  // set title of window
+        frame = new JFrame ("Change One Letter Game");  // set title of window
         frame.add (panel);
   
         // add a key input listener (defined below) to our canvas so we can respond to key pressed
