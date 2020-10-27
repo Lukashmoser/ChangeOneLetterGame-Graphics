@@ -37,8 +37,9 @@ public class GameTemplate extends JPanel {
 	static boolean resetDataEntered = false; // used to reset dataEntered to empty string
 	static String currentPlayer = ""; // tracks the currentplayer
 	static String currentWord = ""; // tracks the currentWord
-	static String startWord = ""; // start word
-	static String goalWord = ""; // goal word
+	static String startWord = "";
+	static String goalWord = "";
+	static String previousWord = "";
 
 	static String playOutput = ""; // output to panel
 	static String playOutput1 = ""; // output to panel
@@ -49,7 +50,8 @@ public class GameTemplate extends JPanel {
 	static String instructionsText = ""; // instructions
 	
 	static int turnOnePhase = 0; // switching between input start word, input goal word, and input word change
-	static String[] fileContents;
+	static String[] fileContents; //creating the array for the dictionary
+	static String errorMessage = "";
 
 	// start main program
 	// * initializes the window for the game
@@ -338,13 +340,13 @@ public class GameTemplate extends JPanel {
 		// getting start word and goal word
 		if (turn == 1) {
 			if (turnOnePhase == 0) {
-				playOutput3 = "Player 1, please enter the starting word.";
+				playOutput3 = errorMessage + "Player 1, please enter the starting word.";
 			}
 			else if (turnOnePhase == 1) {
-				playOutput3 = "Player 2, please enter the goal word";
+				playOutput3 = errorMessage + "Player 2, please enter the goal word";
 			}
 			else if (turnOnePhase == 2) {
-				playOutput3 = getCurrentPlayer() + " enter your input.";
+				playOutput3 = errorMessage + getCurrentPlayer() + " enter your input.";
 			}
 			panel.repaint();
 		}
@@ -370,12 +372,18 @@ public class GameTemplate extends JPanel {
 		//saving start word
 		if (turnOnePhase == 0) {
 			startWord = dataEntered;
-			for(int i = 0; i < fileContents.length; i ++) {
-				
+			if(startWord.length() != 4) {
+				errorMessage = "It must be a four letter word. ";
+				displayTurn();
+			}
+			else if(isValidWord(startWord)) {
+				errorMessage = "That is not a valid english word. ";
+				displayTurn();
 			}
 			currentWord = startWord;
 			playOutputList += "The start word is " + startWord + "\n";
 			turnOnePhase++;
+			errorMessage = "";
 			resetDataEntered = true; 
 			displayTurn();
 		}
@@ -383,17 +391,39 @@ public class GameTemplate extends JPanel {
 		//saving goal word
 		else if (turnOnePhase == 1) {
 			goalWord = dataEntered;
+			if(goalWord.length() != 4) {
+				errorMessage = "It must be a four letter word. ";
+				displayTurn();
+			}
+			else if(isValidWord(goalWord)) {
+				errorMessage = "That is not a valid english word. ";
+				displayTurn();
+			}
 			playOutputList += "The goal word is " + goalWord + "\n";
 			turnOnePhase++;
+			errorMessage = "";
 			resetDataEntered = true;
 			displayTurn();
 		}
 		else {
-			// save dataEntered into a more permanent location and reset it
+			// save dataEntered into a more permanent location, error checking it and then  reseting it
+			previousWord = currentWord;
 			currentWord = dataEntered;
+			if (currentWord.length() != 4) {
+				errorMessage = "The new word must also be a four letter word. ";
+				displayTurn();
+			}
+			else if (isValidWord(currentWord)) {
+				errorMessage = "That is not a valid english word. ";
+				displayTurn();
+			}
+			else if (onlyOneLetterChanged()) {
+				errorMessage = "You can only change one letter. ";
+				displayTurn();
+			}
 			playOutputList += "\n" + currentWord;
 			resetDataEntered = true; // this will cause dataEntered to get erased
-
+			errorMessage = "";
 			turn++; // record turn completed
 			displayTurn();
 		}
@@ -441,6 +471,7 @@ public class GameTemplate extends JPanel {
 		currentWord = "";
 		turn = 1;
 		dataEntered = "";
+		turnOnePhase = 0;
 
 		// calling display turn
 		displayTurn();
@@ -504,5 +535,42 @@ public class GameTemplate extends JPanel {
        return contents;
 
     } // getFileContents
+    
+    // checks if valid 4 letter word
+ 	public static boolean isValidWord(String word) {
+
+ 		//checks all words in dictionary
+ 		for (int i = 0; i < fileContents.length; i++) {
+ 			if (fileContents[i].contains(word)) {
+ 				return true;
+ 			}
+ 		}
+ 		return false;
+ 	}// isValidWord
+ 	
+ 	//checks if the new word has only one letter changed
+ 	public static boolean onlyOneLetterChanged() {
+ 		boolean isThreeLetters;
+ 		int sameLetters = 0;
+ 		if(currentWord.charAt(0) ==  previousWord.charAt(0)) {
+ 			sameLetters++;
+ 		}
+ 		if(currentWord.charAt(1) ==  previousWord.charAt(1)) {
+ 			sameLetters++;
+ 		}
+ 		if(currentWord.charAt(2) ==  previousWord.charAt(2)) {
+ 			sameLetters++;
+ 		}
+ 		if(currentWord.charAt(3) ==  previousWord.charAt(3)) {
+ 			sameLetters++;
+ 		}
+ 		if(sameLetters >= 3) {
+ 			isThreeLetters = false;
+ 		}
+ 		else {
+ 			isThreeLetters = true;
+ 		}
+ 		return isThreeLetters;
+ 	}
 
 } // Even and Odd
