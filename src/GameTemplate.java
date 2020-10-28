@@ -1,3 +1,4 @@
+
 /***************************************************************************************
 * Name:               ChangeOneLetterGame - Graphics
 * Author:             Lukas Moser, Steven Peng
@@ -10,8 +11,6 @@
 *                     corresponding letter in the goal word, otherwise it does a random
 *                     valid move.
 ****************************************************************************************/
-
-//test
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,8 +42,8 @@ public class GameTemplate extends JPanel {
 	static String currentWord = ""; // tracks the currentWord
 	static String startWord = "";
 	static String goalWord = "";
-	static String previousWord = "";
-	static String previousComputerTurn = "";
+	static String previousWord = ""; // tracks the last move
+	static String previousComputerTurn = ""; // tracks the computers last turn
 	static String tempWord = ""; // used for error checking so as to not change current word if invalid
 
 	static String playOutput = ""; // output to panel
@@ -162,8 +161,6 @@ public class GameTemplate extends JPanel {
 			drawString(g, instructionsText, 150, 200); // display instructions
 
 			// display game play
-			// * if you want different types of display for different
-			// * parts of the play, add additional stages (ie PLAY2, PLAY3 etc)
 		} else if (gameStage == PLAY) {
 
 			g.setColor(new Color(24, 160, 202));
@@ -282,6 +279,8 @@ public class GameTemplate extends JPanel {
 		else {
 			dataEntered += (key + "");
 		}
+
+		// displaying who is typing
 		if (turnOnePhase == 1) {
 			playOutput4 = "Player 2 entered";
 		} else {
@@ -289,7 +288,7 @@ public class GameTemplate extends JPanel {
 		}
 		playOutput2 = dataEntered;
 		panel.repaint();
-	}
+	}// recordKey
 
 	// returns name of currentPlayer
 	private static String getCurrentPlayer() {
@@ -297,16 +296,6 @@ public class GameTemplate extends JPanel {
 			return (turn % 2 != 0) ? "Player 1" : "Player 2";
 		} else {
 			return (turn % 2 != 0) ? "Player 1" : "Computer";
-		}
-
-	} // getCurrentPlayer
-
-	// returns name of other player
-	private static String getOtherPlayer() {
-		if (numPlayers == 2) {
-			return (turn % 2 == 0) ? "Player 1" : "Player 2";
-		} else {
-			return (turn % 2 == 0) ? "Player 1" : "Computer";
 		}
 
 	} // getCurrentPlayer
@@ -321,6 +310,8 @@ public class GameTemplate extends JPanel {
 		String computerInput = "";
 		previousWord = currentWord;
 
+		// changes one letter of the word then checks to make sure the computer isn't
+		// repeating a previous move
 		do {
 			computerInput = oneLetterChange(currentWord);
 			if (computerInput != previousWord && computerInput != previousComputerTurn) {
@@ -334,7 +325,7 @@ public class GameTemplate extends JPanel {
 		turn++;
 		displayTurn();
 
-	}
+	}// computerTakeTurn
 
 	// display results from turn
 	public static void displayTurn() {
@@ -365,6 +356,7 @@ public class GameTemplate extends JPanel {
 			panel.repaint();
 		}
 
+		// getting players to take their turns
 		else {
 			// set instructions to execute computer turn
 			if (isComputerTurn()) {
@@ -442,7 +434,7 @@ public class GameTemplate extends JPanel {
 
 		}
 
-	}
+	}// saveInput
 
 	// end game.
 	private static void endGame() {
@@ -454,7 +446,7 @@ public class GameTemplate extends JPanel {
 		playOutput4 = "Press any key to return to menu";
 		gameStage = END_GAME;
 		panel.repaint();
-	}
+	}// endGame
 
 	/* Shuts program down when close button pressed */
 	private static class ExitListener extends WindowAdapter {
@@ -487,7 +479,6 @@ public class GameTemplate extends JPanel {
 		dataEntered = "";
 		turnOnePhase = 0;
 
-		// calling display turn
 		displayTurn();
 
 		panel.repaint();
@@ -583,8 +574,9 @@ public class GameTemplate extends JPanel {
 			isThreeLetters = false;
 		}
 		return isThreeLetters;
-	}
+	}// onlyOneLetterChange
 
+	// generates a four letter word from the dictionary
 	public static String generateWord() {
 		String word = "";
 		char letter = ' ';
@@ -603,8 +595,9 @@ public class GameTemplate extends JPanel {
 		} while (true);
 
 		return word;
-	}
+	}// generateWord
 
+	// changes one letter to create a different valid word
 	public static String oneLetterChange(String word) {
 		String newWord;
 		char newLetter = ' ';
@@ -625,6 +618,6 @@ public class GameTemplate extends JPanel {
 		} while (true);
 
 		return newWord;
-	}
+	}// oneLetterChange
 
 } // GameTemplate
